@@ -1,0 +1,1297 @@
+
+bb_init()
+
+bb_getattr(path="/.Trash", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.Trash", fpath = "/tmp/fuse/current/.Trash"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/.Trash-1000", statbuf=0xb92f7bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.Trash-1000", fpath = "/tmp/fuse/current/.Trash-1000"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/", statbuf=0xb8af6bc0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    st_dev = 2049
+    st_ino = 1316236
+    st_mode = 040775
+    st_nlink = 2
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 4096
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf3c
+    st_mtime = 0x52fdbf4d
+    st_ctime = 0x52fdbf4d
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00098800
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac000b20
+    lock_owner = 0x0000000000000000
+
+bb_readdir(path="/", buf=0xac000990, filler=0xb9cec4a0, offset=0, fi=0xb92f7c30)
+calling filler with name test.txt
+calling filler with name ..
+calling filler with name .
+    flags = 0x00000000
+    fh_old = 0x7fd5ac000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac000b20
+    lock_owner = 0x0000000000000000
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00098800
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac000b20
+    lock_owner = 0x0000000000000000
+
+bb_readdir(path="/", buf=0xac000990, filler=0xb9cec4a0, offset=0, fi=0xb92f7c30)
+calling filler with name test.txt
+calling filler with name ..
+calling filler with name .
+    flags = 0x00000000
+    fh_old = 0x7fd5ac000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac000b20
+    lock_owner = 0x0000000000000000
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac000b20
+    lock_owner = 0x0000000000000000
+
+bb_getattr(path="/test.txt", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    st_dev = 2049
+    st_ino = 1316243
+    st_mode = 0100664
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 21
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf4d
+    st_mtime = 0x52fdbf4d
+    st_ctime = 0x52fdbf4d
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb92f7c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5b4000c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb3ffec30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb3ffec40)
+    flags = 0x00000000
+    fh_old = 0x7fd5a8000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb92f7c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5b4000c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb3ffec30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb3ffec40)
+    flags = 0x00000000
+    fh_old = 0x7fd5a8000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+
+bb_opendir(path="/", fi=0xb92f7c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5b4000c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb3ffec30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb3ffec40)
+    flags = 0x00000000
+    fh_old = 0x7fd5a8000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb92f7c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5b4000c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb3ffec30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb3ffec40)
+    flags = 0x00000000
+    fh_old = 0x7fd5a8000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb92f7c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5b4000c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb3ffec30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb3ffec40)
+    flags = 0x00000000
+    fh_old = 0x7fd5a8000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb92f7c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb92f7c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5b4000c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5b4000c80
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb3ffec30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb3ffec40)
+    flags = 0x00000000
+    fh_old = 0x7fd5a8000b20
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5a8000b20
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/test.txt", mask=02)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+
+bb_open(path"/test.txt", fi=0xb3ffecf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb92f7bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_create(path="/.test.txt.swp", mode=0100600, fi=0xb3ffecf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    flags = 0x000080c2
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_fgetattr(path="/.test.txt.swp", statbuf=0xb3ffebb0, fi=0xb3ffecf0)
+    flags = 0x000080c2
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+    st_dev = 2049
+    st_ino = 1316242
+    st_mode = 0100600
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 4096
+    st_blocks = 0
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5b
+    st_ctime = 0x52fdbf5b
+
+bb_getattr(path="/.test.txt.swx", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swx", fpath = "/tmp/fuse/current/.test.txt.swx"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/.test.txt.swx", statbuf=0xb92f7bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swx", fpath = "/tmp/fuse/current/.test.txt.swx"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_create(path="/.test.txt.swx", mode=0100600, fi=0xb3ffecf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swx", fpath = "/tmp/fuse/current/.test.txt.swx"
+    flags = 0x000080c2
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000007
+    lock_owner = 0x0000000000000000
+
+bb_fgetattr(path="/.test.txt.swx", statbuf=0xb3ffebb0, fi=0xb3ffecf0)
+    flags = 0x000080c2
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000007
+    lock_owner = 0x0000000000000000
+    st_dev = 2049
+    st_ino = 1316244
+    st_mode = 0100600
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 4096
+    st_blocks = 0
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5b
+    st_ctime = 0x52fdbf5b
+
+bb_flush(path="/.test.txt.swx", fi=0xb8af6cf0)
+    flags = 0x00000000
+    fh_old = 0x00000007
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000007
+    lock_owner = 0xacc03a28af39bd70
+
+bb_release(path="/.test.txt.swx", fi=0xb3ffecf0)
+    flags = 0x00008002
+    fh_old = 0x00000007
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000007
+    lock_owner = 0x0000000000000000
+bb_unlink(path="/.test.txt.swx")
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swx", fpath = "/tmp/fuse/current/.test.txt.swx"
+
+bb_flush(path="/.test.txt.swp", fi=0xb8af6cf0)
+    flags = 0x00000000
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0xacc03a28af39bd70
+
+bb_release(path="/.test.txt.swp", fi=0xb3ffecf0)
+    flags = 0x00008002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+bb_unlink(path="/.test.txt.swp")
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb3ffebf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb92f7bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getattr lstat: No such file or directory
+    st_dev = 0
+    st_ino = 0
+    st_mode = 00
+    st_nlink = 0
+    st_uid = 0
+    st_gid = 0
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 0
+    st_blocks = 0
+    st_atime = 0x00000000
+    st_mtime = 0x00000000
+    st_ctime = 0x00000000
+
+bb_create(path="/.test.txt.swp", mode=0100600, fi=0xb3ffecf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    flags = 0x000280c2
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_fgetattr(path="/.test.txt.swp", statbuf=0xb3ffebb0, fi=0xb3ffecf0)
+    flags = 0x000280c2
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+    st_dev = 2049
+    st_ino = 1316242
+    st_mode = 0100600
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 4096
+    st_blocks = 0
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5b
+    st_ctime = 0x52fdbf5b
+
+bb_getxattr(path = "/.test.txt.swp", name = "security.capability", value = 0x00000000, size = 0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_write(path="/.test.txt.swp", buf=0xba0dc060, size=4096, offset=0, fi=0xb8af6e30)
+    flags = 0x00028002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_chmod(fpath="/.test.txt.swp", mode=0100644)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb3ffeb10)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    st_dev = 2049
+    st_ino = 1316242
+    st_mode = 0100644
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 4096
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5b
+    st_ctime = 0x52fdbf5b
+
+bb_flush(path="/test.txt", fi=0xb92f7cf0)
+    flags = 0x00000000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0xacc03a28af39bd70
+
+bb_release(path="/test.txt", fi=0xb8af6cf0)
+    flags = 0x00008000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_open(path"/test.txt", fi=0xb3ffecf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_read(path="/test.txt", buf=0xb4000c50, size=4096, offset=0, fi=0xb92f7cf0)
+    flags = 0x00008000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_fgetattr(path="/test.txt", statbuf=0xb8af6bc0, fi=0xb8af6cf0)
+    flags = 0x00000000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+    st_dev = 2049
+    st_ino = 1316243
+    st_mode = 0100664
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 21
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf4d
+    st_ctime = 0x52fdbf4d
+
+bb_flush(path="/test.txt", fi=0xb3ffecf0)
+    flags = 0x00000000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0xacc03a28af39bd70
+
+bb_release(path="/test.txt", fi=0xb92f7cf0)
+    flags = 0x00008000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_opendir(path="/", fi=0xb8af6c30)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    flags = 0x00008000
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_access(path="/", mask=01)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+
+bb_releasedir(path="/", fi=0xb8af6c40)
+    flags = 0x00000000
+    fh_old = 0x7fd5ac008c80
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x00007fd5ac008c80
+    lock_owner = 0x0000000000000000
+
+bb_getxattr(path = "/.test.txt.swp", name = "security.capability", value = 0x00000000, size = 0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_write(path="/.test.txt.swp", buf=0xba0dc060, size=4096, offset=0, fi=0xb8af6e30)
+    flags = 0x00028002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_getattr(path="/test.txt", statbuf=0xb3ffebf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    st_dev = 2049
+    st_ino = 1316243
+    st_mode = 0100664
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 21
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf4d
+    st_ctime = 0x52fdbf4d
+
+bb_access(path="/test.txt", mask=02)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+
+bb_access(path="/test.txt", mask=02)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+
+bb_getxattr(path = "/test.txt", name = "system.posix_acl_access", value = 0xa8000990, size = 132)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_getxattr(path = "/.test.txt.swp", name = "security.capability", value = 0x00000000, size = 0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_write(path="/.test.txt.swp", buf=0xba0dc060, size=4096, offset=4096, fi=0xb8af6e30)
+    flags = 0x00028002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_getxattr(path = "/.test.txt.swp", name = "security.capability", value = 0x00000000, size = 0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_write(path="/.test.txt.swp", buf=0xba0fe060, size=4096, offset=8192, fi=0xb92f7e30)
+    flags = 0x00028002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_fsync(path="/.test.txt.swp", datasync=0, fi=0xb8af6cf0)
+    flags = 0x00000000
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_open(path"/test.txt", fi=0xb3ffecf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    flags = 0x00008001
+    fh_old = 0x00000000
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_truncate(path="/test.txt", newsize=0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+
+bb_getattr(path="/test.txt", statbuf=0xb92f7b10)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    st_dev = 2049
+    st_ino = 1316243
+    st_mode = 0100664
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 0
+    st_blksize = 4096
+    st_blocks = 0
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5f
+    st_ctime = 0x52fdbf5f
+
+bb_getxattr(path = "/test.txt", name = "security.capability", value = 0x00000000, size = 0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_write(path="/test.txt", buf=0xba0ba060, size=25, offset=0, fi=0xb3ffee30)
+    flags = 0x00008001
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_fsync(path="/test.txt", datasync=0, fi=0xb92f7cf0)
+    flags = 0x00000000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_flush(path="/test.txt", fi=0xb8af6cf0)
+    flags = 0x00000000
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0xacc03a28af39bd70
+
+bb_release(path="/test.txt", fi=0xb92f7cf0)
+    flags = 0x00008001
+    fh_old = 0x00000005
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000005
+    lock_owner = 0x0000000000000000
+
+bb_chmod(fpath="/test.txt", mode=0100664)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+
+bb_getattr(path="/test.txt", statbuf=0xb3ffeb10)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    st_dev = 2049
+    st_ino = 1316243
+    st_mode = 0100664
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 25
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5f
+    st_ctime = 0x52fdbf5f
+
+bb_setxattr(path="/test.txt", name="system.posix_acl_access", value="", size=28, flags=0x00000000)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+
+bb_getxattr(path = "/.test.txt.swp", name = "security.capability", value = 0x00000000, size = 0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    ERROR bb_getxattr lgetxattr: No data available
+
+bb_write(path="/.test.txt.swp", buf=0xba0ba060, size=4096, offset=0, fi=0xb3ffee30)
+    flags = 0x00028002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_getattr(path="/test.txt", statbuf=0xb8af6bc0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/test.txt", fpath = "/tmp/fuse/current/test.txt"
+    st_dev = 2049
+    st_ino = 1316243
+    st_mode = 0100664
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 25
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5f
+    st_ctime = 0x52fdbf5f
+
+bb_flush(path="/.test.txt.swp", fi=0xb92f7cf0)
+    flags = 0x00000000
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0xacc03a28af39bd70
+
+bb_release(path="/.test.txt.swp", fi=0xb3ffecf0)
+    flags = 0x00028002
+    fh_old = 0x00000006
+    writepage = 0
+    direct_io = 0
+    keep_cache = 0
+    fh = 0x0000000000000006
+    lock_owner = 0x0000000000000000
+
+bb_getattr(path="/.test.txt.swp", statbuf=0xb8af6bf0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+    st_dev = 2049
+    st_ino = 1316242
+    st_mode = 0100644
+    st_nlink = 1
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 12288
+    st_blksize = 4096
+    st_blocks = 24
+    st_atime = 0x52fdbf5b
+    st_mtime = 0x52fdbf5f
+    st_ctime = 0x52fdbf5f
+bb_unlink(path="/.test.txt.swp")
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/.test.txt.swp", fpath = "/tmp/fuse/current/.test.txt.swp"
+
+bb_getattr(path="/", statbuf=0xb8af6bc0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    st_dev = 2049
+    st_ino = 1316236
+    st_mode = 040775
+    st_nlink = 2
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 4096
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf59
+    st_mtime = 0x52fdbf5f
+    st_ctime = 0x52fdbf5f
+
+bb_getattr(path="/", statbuf=0xb92f7bc0)
+    bb_fullpath:  rootdir = "/tmp/fuse/current", path = "/", fpath = "/tmp/fuse/current/"
+    st_dev = 2049
+    st_ino = 1316236
+    st_mode = 040775
+    st_nlink = 2
+    st_uid = 1000
+    st_gid = 1000
+    st_rdev = 0
+    st_size = 4096
+    st_blksize = 4096
+    st_blocks = 8
+    st_atime = 0x52fdbf62
+    st_mtime = 0x52fdbf64
+    st_ctime = 0x52fdbf64
+
+bb_destroy(userdata=0x00f3e010)
