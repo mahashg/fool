@@ -8,7 +8,7 @@ log.o : log.c log.h params.h
 	gcc -g -Wall `pkg-config fuse --cflags` -c log.c
 
 clean:
-	rm -f bbfs *.o
+	rm -f bbfs bbfs.o log.o
 
 dist:
 	rm -rf fuse-tutorial/

@@ -1,26 +1,11 @@
 /*
-  Big Brother File System
-  Copyright (C) 2012 Joseph J. Pfeiffer, Jr., Ph.D. <pfeiffer@cs.nmsu.edu>
+* File System for MOOL
+* @author: mahesh.gupta
+* @version: 1.2
+* @date: 23/FEB
 
-  This program can be distributed under the terms of the GNU GPLv3.
-  See the file COPYING.
-
-  This code is derived from function prototypes found /usr/include/fuse/fuse.h
-  Copyright (C) 2001-2007  Miklos Szeredi <miklos@szeredi.hu>
-  His code is licensed under the LGPLv2.
-  A copy of that code is included in the file fuse.h
-  
-  The point of this FUSE filesystem is to provide an introduction to
-  FUSE.  It was my first FUSE filesystem as I got to know the
-  software; hopefully, the comments in this code will help people who
-  follow later to get a gentler introduction.
-
-  This might be called a no-op filesystem:  it doesn't impose
-  filesystem semantics on top of any other existing structure.  It
-  simply reports the requests that come in, and passes them to an
-  underlying filesystem.  The information is saved in a logfile named
-  bbfs.log, in the directory from which you run bbfs.
-
+Note:
+* Compile Using
   gcc -Wall `pkg-config fuse --cflags --libs` -o bbfs bbfs.c
 */
 
@@ -43,7 +28,7 @@
 #include "log.h"
 
 // Report errors to logfile and give -errno to caller
-static int bb_error(char *str)
+static int fool_error(char *str)
 {
     int ret = -errno;
     
@@ -59,14 +44,34 @@ static int bb_error(char *str)
 //  have the mountpoint.  I'll save it away early on in main(), and then
 //  whenever I need a path for something I'll call this to construct
 //  it.
-static void bb_fullpath(char fpath[PATH_MAX], const char *path)
+static void fool_fullpath_generic(char fpath[PATH_MAX], const char *path, char* mnt_pt)
 {
-    strcpy(fpath, BB_DATA->rootdir);
+    strcpy(fpath, mnt_pt);
     strncat(fpath, path, PATH_MAX); // ridiculously long paths will
 				    // break here
 
-    log_msg("    bb_fullpath:  rootdir = \"%s\", path = \"%s\", fpath = \"%s\"\n",
-	    BB_DATA->rootdir, path, fpath);
+    log_msg("    fool_fullpath:  rootdir = \"%s\", path = \"%s\", fpath = \"%s\"\n",
+	    mnt_pt, path, fpath);
+}
+
+
+static void fool_fullpath_hdd(char fpath[PATH_MAX], const char *path)
+{
+	fool_fullpath_generic(fpath, path, BB_DATA->hdd);
+}
+
+static void fool_fullpath_ssd(char fpath[PATH_MAX], const char *path)
+{
+       fool_fullpath_generic(fpath, path, BB_DATA->ssd);
+}
+
+static void fool_fullpath_mnt(char fpath[PATH_MAX], const char *path)
+{
+	fool_fullpath_generic(fpath, path, BB_DATA->mnt);
+}
+//TODO: for backward compatibility, later to remove it.
+static void fool_fullpath(char fpath[PATH_MAX], const char *path){
+	fool_fullpath_ssd(fpath, path);
 }
 
 ///////////////////////////////////////////////////////////
@@ -80,18 +85,18 @@ static void bb_fullpath(char fpath[PATH_MAX], const char *path)
  * ignored.  The 'st_ino' field is ignored except if the 'use_ino'
  * mount option is given.
  */
-int bb_getattr(const char *path, struct stat *statbuf)
+int fool_getattr(const char *path, struct stat *statbuf)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_getattr(path=\"%s\", statbuf=0x%08x)\n",
+    log_msg("\nfool_getattr(path=\"%s\", statbuf=0x%08x)\n",
 	  path, statbuf);
-    bb_fullpath(fpath, path);
+    fool_fullpath_ssd(fpath, path);
     
     retstat = lstat(fpath, statbuf);
     if (retstat != 0)
-	retstat = bb_error("bb_getattr lstat");
+	retstat = fool_error("fool_getattr lstat");
     
     log_stat(statbuf);
     
@@ -108,20 +113,20 @@ int bb_getattr(const char *path, struct stat *statbuf)
  */
 // Note the system readlink() will truncate and lose the terminating
 // null.  So, the size passed to to the system readlink() must be one
-// less than the size passed to bb_readlink()
-// bb_readlink() code by Bernardo F Costa (thanks!)
-int bb_readlink(const char *path, char *link, size_t size)
+// less than the size passed to fool_readlink()
+// fool_readlink() code by Bernardo F Costa (thanks!)
+int fool_readlink(const char *path, char *link, size_t size)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("bb_readlink(path=\"%s\", link=\"%s\", size=%d)\n",
+    log_msg("fool_readlink(path=\"%s\", link=\"%s\", size=%d)\n",
 	  path, link, size);
-    bb_fullpath(fpath, path);
+    fool_fullpath_ssd(fpath, path);
     
     retstat = readlink(fpath, link, size - 1);
     if (retstat < 0)
-	retstat = bb_error("bb_readlink readlink");
+	retstat = fool_error("fool_readlink readlink");
     else  {
 	link[retstat] = '\0';
 	retstat = 0;
@@ -136,87 +141,91 @@ int bb_readlink(const char *path, char *link, size_t size)
  * creation of all non-directory, non-symlink nodes.
  */
 // shouldn't that comment be "if" there is no.... ?
-int bb_mknod(const char *path, mode_t mode, dev_t dev)
+int fool_mknod(const char *path, mode_t mode, dev_t dev)
 {
     int retstat = 0;
-    char fpath[PATH_MAX];
+    char ssdpath[PATH_MAX];
+    char hddpath[PATH_MAX];
     
-    log_msg("\nbb_mknod(path=\"%s\", mode=0%3o, dev=%lld)\n",
+    log_msg("\nfool_mknod(path=\"%s\", mode=0%3o, dev=%lld)\n",
 	  path, mode, dev);
-    bb_fullpath(fpath, path);
+
+    fool_fullpath_ssd(ssdpath, path);
+   	fool_fullpath_hdd(hddpath, path);
     
     // On Linux this could just be 'mknod(path, mode, rdev)' but this
     //  is more portable
     if (S_ISREG(mode)) {
-        retstat = open(fpath, O_CREAT | O_EXCL | O_WRONLY, mode);
+        retstat = open(hddpath, O_CREAT | O_EXCL | O_WRONLY, mode);
 	if (retstat < 0)
-	    retstat = bb_error("bb_mknod open");
+	    retstat = fool_error("fool_mknod open");
         else {
             retstat = close(retstat);
 	    if (retstat < 0)
-		retstat = bb_error("bb_mknod close");
+		retstat = fool_error("fool_mknod close");
 	}
     } else
 	if (S_ISFIFO(mode)) {
-	    retstat = mkfifo(fpath, mode);
+	    retstat = mkfifo(hddpath, mode);
 	    if (retstat < 0)
-		retstat = bb_error("bb_mknod mkfifo");
+		retstat = fool_error("fool_mknod mkfifo");
 	} else {
-	    retstat = mknod(fpath, mode, dev);
+	    retstat = mknod(hddpath, mode, dev);
 	    if (retstat < 0)
-		retstat = bb_error("bb_mknod mknod");
+		retstat = fool_error("fool_mknod mknod");
 	}
-    
+
+    symlink(hddpath, ssdpath);  
     return retstat;
 }
 
 /** Create a directory */
-int bb_mkdir(const char *path, mode_t mode)
+int fool_mkdir(const char *path, mode_t mode)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_mkdir(path=\"%s\", mode=0%3o)\n",
+    log_msg("\nfool_mkdir(path=\"%s\", mode=0%3o)\n",
 	    path, mode);
-    bb_fullpath(fpath, path);
+    fool_fullpath_ssd(fpath, path);
     
     retstat = mkdir(fpath, mode);
     if (retstat < 0)
-	retstat = bb_error("bb_mkdir mkdir");
+	retstat = fool_error("fool_mkdir mkdir");
     
     return retstat;
 }
 
 /** Remove a file */
-int bb_unlink(const char *path)
+int fool_unlink(const char *path)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("bb_unlink(path=\"%s\")\n",
+    log_msg("fool_unlink(path=\"%s\")\n",
 	    path);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = unlink(fpath);
     if (retstat < 0)
-	retstat = bb_error("bb_unlink unlink");
+	retstat = fool_error("fool_unlink unlink");
     
     return retstat;
 }
 
 /** Remove a directory */
-int bb_rmdir(const char *path)
+int fool_rmdir(const char *path)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("bb_rmdir(path=\"%s\")\n",
+    log_msg("fool_rmdir(path=\"%s\")\n",
 	    path);
-    bb_fullpath(fpath, path);
+    fool_fullpath_ssd(fpath, path);
     
     retstat = rmdir(fpath);
     if (retstat < 0)
-	retstat = bb_error("bb_rmdir rmdir");
+	retstat = fool_error("fool_rmdir rmdir");
     
     return retstat;
 }
@@ -226,126 +235,126 @@ int bb_rmdir(const char *path)
 // to the symlink() system call.  The 'path' is where the link points,
 // while the 'link' is the link itself.  So we need to leave the path
 // unaltered, but insert the link into the mounted directory.
-int bb_symlink(const char *path, const char *link)
+int fool_symlink(const char *path, const char *link)
 {
     int retstat = 0;
     char flink[PATH_MAX];
     
-    log_msg("\nbb_symlink(path=\"%s\", link=\"%s\")\n",
+    log_msg("\nfool_symlink(path=\"%s\", link=\"%s\")\n",
 	    path, link);
-    bb_fullpath(flink, link);
+    fool_fullpath(flink, link);
     
     retstat = symlink(path, flink);
     if (retstat < 0)
-	retstat = bb_error("bb_symlink symlink");
+	retstat = fool_error("fool_symlink symlink");
     
     return retstat;
 }
 
 /** Rename a file */
 // both path and newpath are fs-relative
-int bb_rename(const char *path, const char *newpath)
+int fool_rename(const char *path, const char *newpath)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     char fnewpath[PATH_MAX];
     
-    log_msg("\nbb_rename(fpath=\"%s\", newpath=\"%s\")\n",
+    log_msg("\nfool_rename(fpath=\"%s\", newpath=\"%s\")\n",
 	    path, newpath);
-    bb_fullpath(fpath, path);
-    bb_fullpath(fnewpath, newpath);
+    fool_fullpath(fpath, path);
+    fool_fullpath(fnewpath, newpath);
     
     retstat = rename(fpath, fnewpath);
     if (retstat < 0)
-	retstat = bb_error("bb_rename rename");
+	retstat = fool_error("fool_rename rename");
     
     return retstat;
 }
 
 /** Create a hard link to a file */
-int bb_link(const char *path, const char *newpath)
+int fool_link(const char *path, const char *newpath)
 {
     int retstat = 0;
     char fpath[PATH_MAX], fnewpath[PATH_MAX];
     
-    log_msg("\nbb_link(path=\"%s\", newpath=\"%s\")\n",
+    log_msg("\nfool_link(path=\"%s\", newpath=\"%s\")\n",
 	    path, newpath);
-    bb_fullpath(fpath, path);
-    bb_fullpath(fnewpath, newpath);
+    fool_fullpath(fpath, path);
+    fool_fullpath(fnewpath, newpath);
     
     retstat = link(fpath, fnewpath);
     if (retstat < 0)
-	retstat = bb_error("bb_link link");
+	retstat = fool_error("fool_link link");
     
     return retstat;
 }
 
 /** Change the permission bits of a file */
-int bb_chmod(const char *path, mode_t mode)
+int fool_chmod(const char *path, mode_t mode)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_chmod(fpath=\"%s\", mode=0%03o)\n",
+    log_msg("\nfool_chmod(fpath=\"%s\", mode=0%03o)\n",
 	    path, mode);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = chmod(fpath, mode);
     if (retstat < 0)
-	retstat = bb_error("bb_chmod chmod");
+	retstat = fool_error("fool_chmod chmod");
     
     return retstat;
 }
 
 /** Change the owner and group of a file */
-int bb_chown(const char *path, uid_t uid, gid_t gid)
+int fool_chown(const char *path, uid_t uid, gid_t gid)
   
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_chown(path=\"%s\", uid=%d, gid=%d)\n",
+    log_msg("\nfool_chown(path=\"%s\", uid=%d, gid=%d)\n",
 	    path, uid, gid);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = chown(fpath, uid, gid);
     if (retstat < 0)
-	retstat = bb_error("bb_chown chown");
+	retstat = fool_error("fool_chown chown");
     
     return retstat;
 }
 
 /** Change the size of a file */
-int bb_truncate(const char *path, off_t newsize)
+int fool_truncate(const char *path, off_t newsize)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_truncate(path=\"%s\", newsize=%lld)\n",
+    log_msg("\nfool_truncate(path=\"%s\", newsize=%lld)\n",
 	    path, newsize);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = truncate(fpath, newsize);
     if (retstat < 0)
-	bb_error("bb_truncate truncate");
+	fool_error("fool_truncate truncate");
     
     return retstat;
 }
 
 /** Change the access and/or modification times of a file */
 /* note -- I'll want to change this as soon as 2.6 is in debian testing */
-int bb_utime(const char *path, struct utimbuf *ubuf)
+int fool_utime(const char *path, struct utimbuf *ubuf)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_utime(path=\"%s\", ubuf=0x%08x)\n",
+    log_msg("\nfool_utime(path=\"%s\", ubuf=0x%08x)\n",
 	    path, ubuf);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = utime(fpath, ubuf);
     if (retstat < 0)
-	retstat = bb_error("bb_utime utime");
+	retstat = fool_error("fool_utime utime");
     
     return retstat;
 }
@@ -360,19 +369,19 @@ int bb_utime(const char *path, struct utimbuf *ubuf)
  *
  * Changed in version 2.2
  */
-int bb_open(const char *path, struct fuse_file_info *fi)
+int fool_open(const char *path, struct fuse_file_info *fi)
 {
     int retstat = 0;
     int fd;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_open(path\"%s\", fi=0x%08x)\n",
+    log_msg("\nfool_open(path\"%s\", fi=0x%08x)\n",
 	    path, fi);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     fd = open(fpath, fi->flags);
     if (fd < 0)
-	retstat = bb_error("bb_open open");
+	retstat = fool_error("fool_open open");
     
     fi->fh = fd;
     log_fi(fi);
@@ -396,18 +405,18 @@ int bb_open(const char *path, struct fuse_file_info *fi)
 // can return with anything up to the amount of data requested. nor
 // with the fusexmp code which returns the amount of data also
 // returned by read.
-int bb_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+int fool_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_read(path=\"%s\", buf=0x%08x, size=%d, offset=%lld, fi=0x%08x)\n",
+    log_msg("\nfool_read(path=\"%s\", buf=0x%08x, size=%d, offset=%lld, fi=0x%08x)\n",
 	    path, buf, size, offset, fi);
     // no need to get fpath on this one, since I work from fi->fh not the path
     log_fi(fi);
     
     retstat = pread(fi->fh, buf, size, offset);
     if (retstat < 0)
-	retstat = bb_error("bb_read read");
+	retstat = fool_error("fool_read read");
     
     return retstat;
 }
@@ -422,12 +431,12 @@ int bb_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_
  */
 // As  with read(), the documentation above is inconsistent with the
 // documentation for the write() system call.
-int bb_write(const char *path, const char *buf, size_t size, off_t offset,
+int fool_write(const char *path, const char *buf, size_t size, off_t offset,
 	     struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_write(path=\"%s\", buf=0x%08x, size=%d, offset=%lld, fi=0x%08x)\n",
+    log_msg("\nfool_write(path=\"%s\", buf=0x%08x, size=%d, offset=%lld, fi=0x%08x)\n",
 	    path, buf, size, offset, fi
 	    );
     // no need to get fpath on this one, since I work from fi->fh not the path
@@ -435,7 +444,7 @@ int bb_write(const char *path, const char *buf, size_t size, off_t offset,
 	
     retstat = pwrite(fi->fh, buf, size, offset);
     if (retstat < 0)
-	retstat = bb_error("bb_write pwrite");
+	retstat = fool_error("fool_write pwrite");
     
     return retstat;
 }
@@ -447,19 +456,19 @@ int bb_write(const char *path, const char *buf, size_t size, off_t offset,
  * Replaced 'struct statfs' parameter with 'struct statvfs' in
  * version 2.5
  */
-int bb_statfs(const char *path, struct statvfs *statv)
+int fool_statfs(const char *path, struct statvfs *statv)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_statfs(path=\"%s\", statv=0x%08x)\n",
+    log_msg("\nfool_statfs(path=\"%s\", statv=0x%08x)\n",
 	    path, statv);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     // get stats for underlying filesystem
     retstat = statvfs(fpath, statv);
     if (retstat < 0)
-	retstat = bb_error("bb_statfs statvfs");
+	retstat = fool_error("fool_statfs statvfs");
     
     log_statvfs(statv);
     
@@ -489,11 +498,11 @@ int bb_statfs(const char *path, struct statvfs *statv)
  *
  * Changed in version 2.2
  */
-int bb_flush(const char *path, struct fuse_file_info *fi)
+int fool_flush(const char *path, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_flush(path=\"%s\", fi=0x%08x)\n", path, fi);
+    log_msg("\nfool_flush(path=\"%s\", fi=0x%08x)\n", path, fi);
     // no need to get fpath on this one, since I work from fi->fh not the path
     log_fi(fi);
 	
@@ -514,11 +523,11 @@ int bb_flush(const char *path, struct fuse_file_info *fi)
  *
  * Changed in version 2.2
  */
-int bb_release(const char *path, struct fuse_file_info *fi)
+int fool_release(const char *path, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_release(path=\"%s\", fi=0x%08x)\n",
+    log_msg("\nfool_release(path=\"%s\", fi=0x%08x)\n",
 	  path, fi);
     log_fi(fi);
 
@@ -536,11 +545,11 @@ int bb_release(const char *path, struct fuse_file_info *fi)
  *
  * Changed in version 2.2
  */
-int bb_fsync(const char *path, int datasync, struct fuse_file_info *fi)
+int fool_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_fsync(path=\"%s\", datasync=%d, fi=0x%08x)\n",
+    log_msg("\nfool_fsync(path=\"%s\", datasync=%d, fi=0x%08x)\n",
 	    path, datasync, fi);
     log_fi(fi);
     
@@ -550,41 +559,41 @@ int bb_fsync(const char *path, int datasync, struct fuse_file_info *fi)
 	retstat = fsync(fi->fh);
     
     if (retstat < 0)
-	bb_error("bb_fsync fsync");
+	fool_error("fool_fsync fsync");
     
     return retstat;
 }
 
 /** Set extended attributes */
-int bb_setxattr(const char *path, const char *name, const char *value, size_t size, int flags)
+int fool_setxattr(const char *path, const char *name, const char *value, size_t size, int flags)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_setxattr(path=\"%s\", name=\"%s\", value=\"%s\", size=%d, flags=0x%08x)\n",
+    log_msg("\nfool_setxattr(path=\"%s\", name=\"%s\", value=\"%s\", size=%d, flags=0x%08x)\n",
 	    path, name, value, size, flags);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = lsetxattr(fpath, name, value, size, flags);
     if (retstat < 0)
-	retstat = bb_error("bb_setxattr lsetxattr");
+	retstat = fool_error("fool_setxattr lsetxattr");
     
     return retstat;
 }
 
 /** Get extended attributes */
-int bb_getxattr(const char *path, const char *name, char *value, size_t size)
+int fool_getxattr(const char *path, const char *name, char *value, size_t size)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_getxattr(path = \"%s\", name = \"%s\", value = 0x%08x, size = %d)\n",
+    log_msg("\nfool_getxattr(path = \"%s\", name = \"%s\", value = 0x%08x, size = %d)\n",
 	    path, name, value, size);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = lgetxattr(fpath, name, value, size);
     if (retstat < 0)
-	retstat = bb_error("bb_getxattr lgetxattr");
+	retstat = fool_error("fool_getxattr lgetxattr");
     else
 	log_msg("    value = \"%s\"\n", value);
     
@@ -592,20 +601,20 @@ int bb_getxattr(const char *path, const char *name, char *value, size_t size)
 }
 
 /** List extended attributes */
-int bb_listxattr(const char *path, char *list, size_t size)
+int fool_listxattr(const char *path, char *list, size_t size)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     char *ptr;
     
-    log_msg("bb_listxattr(path=\"%s\", list=0x%08x, size=%d)\n",
+    log_msg("fool_listxattr(path=\"%s\", list=0x%08x, size=%d)\n",
 	    path, list, size
 	    );
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = llistxattr(fpath, list, size);
     if (retstat < 0)
-	retstat = bb_error("bb_listxattr llistxattr");
+	retstat = fool_error("fool_listxattr llistxattr");
     
     log_msg("    returned attributes (length %d):\n", retstat);
     for (ptr = list; ptr < list + retstat; ptr += strlen(ptr)+1)
@@ -615,18 +624,18 @@ int bb_listxattr(const char *path, char *list, size_t size)
 }
 
 /** Remove extended attributes */
-int bb_removexattr(const char *path, const char *name)
+int fool_removexattr(const char *path, const char *name)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_removexattr(path=\"%s\", name=\"%s\")\n",
+    log_msg("\nfool_removexattr(path=\"%s\", name=\"%s\")\n",
 	    path, name);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = lremovexattr(fpath, name);
     if (retstat < 0)
-	retstat = bb_error("bb_removexattr lrmovexattr");
+	retstat = fool_error("fool_removexattr lrmovexattr");
     
     return retstat;
 }
@@ -638,19 +647,19 @@ int bb_removexattr(const char *path, const char *name)
  *
  * Introduced in version 2.3
  */
-int bb_opendir(const char *path, struct fuse_file_info *fi)
+int fool_opendir(const char *path, struct fuse_file_info *fi)
 {
     DIR *dp;
     int retstat = 0;
     char fpath[PATH_MAX];
     
-    log_msg("\nbb_opendir(path=\"%s\", fi=0x%08x)\n",
+    log_msg("\nfool_opendir(path=\"%s\", fi=0x%08x)\n",
 	  path, fi);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     dp = opendir(fpath);
     if (dp == NULL)
-	retstat = bb_error("bb_opendir opendir");
+	retstat = fool_error("fool_opendir opendir");
     
     fi->fh = (intptr_t) dp;
     
@@ -680,14 +689,14 @@ int bb_opendir(const char *path, struct fuse_file_info *fi)
  *
  * Introduced in version 2.3
  */
-int bb_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset,
+int fool_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset,
 	       struct fuse_file_info *fi)
 {
     int retstat = 0;
     DIR *dp;
     struct dirent *de;
     
-    log_msg("\nbb_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n",
+    log_msg("\nfool_readdir(path=\"%s\", buf=0x%08x, filler=0x%08x, offset=%lld, fi=0x%08x)\n",
 	    path, buf, filler, offset, fi);
     // once again, no need for fullpath -- but note that I need to cast fi->fh
     dp = (DIR *) (uintptr_t) fi->fh;
@@ -698,7 +707,7 @@ int bb_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset
     // which I can get an error from readdir()
     de = readdir(dp);
     if (de == 0) {
-	retstat = bb_error("bb_readdir readdir");
+	retstat = fool_error("fool_readdir readdir");
 	return retstat;
     }
 
@@ -709,7 +718,7 @@ int bb_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset
     do {
 	log_msg("calling filler with name %s\n", de->d_name);
 	if (filler(buf, de->d_name, NULL, 0) != 0) {
-	    log_msg("    ERROR bb_readdir filler:  buffer full");
+	    log_msg("    ERROR fool_readdir filler:  buffer full");
 	    return -ENOMEM;
 	}
     } while ((de = readdir(dp)) != NULL);
@@ -723,11 +732,11 @@ int bb_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset
  *
  * Introduced in version 2.3
  */
-int bb_releasedir(const char *path, struct fuse_file_info *fi)
+int fool_releasedir(const char *path, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_releasedir(path=\"%s\", fi=0x%08x)\n",
+    log_msg("\nfool_releasedir(path=\"%s\", fi=0x%08x)\n",
 	    path, fi);
     log_fi(fi);
     
@@ -745,11 +754,11 @@ int bb_releasedir(const char *path, struct fuse_file_info *fi)
  */
 // when exactly is this called?  when a user calls fsync and it
 // happens to be a directory? ???
-int bb_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
+int fool_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_fsyncdir(path=\"%s\", datasync=%d, fi=0x%08x)\n",
+    log_msg("\nfool_fsyncdir(path=\"%s\", datasync=%d, fi=0x%08x)\n",
 	    path, datasync, fi);
     log_fi(fi);
     
@@ -773,10 +782,10 @@ int bb_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
 // parameter coming in here, or else the fact should be documented
 // (and this might as well return void, as it did in older versions of
 // FUSE).
-void *bb_init(struct fuse_conn_info *conn)
+void *fool_init(struct fuse_conn_info *conn)
 {
     
-    log_msg("\nbb_init()\n");
+    log_msg("\nfool_init()\n");
     
     return BB_DATA;
 }
@@ -788,9 +797,9 @@ void *bb_init(struct fuse_conn_info *conn)
  *
  * Introduced in version 2.3
  */
-void bb_destroy(void *userdata)
+void fool_destroy(void *userdata)
 {
-    log_msg("\nbb_destroy(userdata=0x%08x)\n", userdata);
+    log_msg("\nfool_destroy(userdata=0x%08x)\n", userdata);
 }
 
 /**
@@ -804,19 +813,19 @@ void bb_destroy(void *userdata)
  *
  * Introduced in version 2.5
  */
-int bb_access(const char *path, int mask)
+int fool_access(const char *path, int mask)
 {
     int retstat = 0;
     char fpath[PATH_MAX];
    
-    log_msg("\nbb_access(path=\"%s\", mask=0%o)\n",
+    log_msg("\nfool_access(path=\"%s\", mask=0%o)\n",
 	    path, mask);
-    bb_fullpath(fpath, path);
+    fool_fullpath(fpath, path);
     
     retstat = access(fpath, mask);
     
     if (retstat < 0)
-	retstat = bb_error("bb_access access");
+	retstat = fool_error("fool_access access");
     
     return retstat;
 }
@@ -833,19 +842,24 @@ int bb_access(const char *path, int mask)
  *
  * Introduced in version 2.5
  */
-int bb_create(const char *path, mode_t mode, struct fuse_file_info *fi)
+int fool_create(const char *path, mode_t mode, struct fuse_file_info *fi)
 {
     int retstat = 0;
-    char fpath[PATH_MAX];
+    char ssdpath[PATH_MAX];
+	char hddpath[PATH_MAX];
     int fd;
     
-    log_msg("\nbb_create(path=\"%s\", mode=0%03o, fi=0x%08x)\n",
+    log_msg("\nfool_create(path=\"%s\", mode=0%03o, fi=0x%08x)\n",
 	    path, mode, fi);
-    bb_fullpath(fpath, path);
+    fool_fullpath_hdd(hddpath, path);
+	fool_fullpath_ssd(ssdpath, path);
     
-    fd = creat(fpath, mode);
+    fd = creat(hddpath, mode);
     if (fd < 0)
-	retstat = bb_error("bb_create creat");
+		retstat = fool_error("fool_create creat");
+
+	symlink(hddpath, ssdpath);
+    fd = open(hddpath, fi->flags);
     
     fi->fh = fd;
     
@@ -866,17 +880,17 @@ int bb_create(const char *path, mode_t mode, struct fuse_file_info *fi)
  *
  * Introduced in version 2.5
  */
-int bb_ftruncate(const char *path, off_t offset, struct fuse_file_info *fi)
+int fool_ftruncate(const char *path, off_t offset, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_ftruncate(path=\"%s\", offset=%lld, fi=0x%08x)\n",
+    log_msg("\nfool_ftruncate(path=\"%s\", offset=%lld, fi=0x%08x)\n",
 	    path, offset, fi);
     log_fi(fi);
     
     retstat = ftruncate(fi->fh, offset);
     if (retstat < 0)
-	retstat = bb_error("bb_ftruncate ftruncate");
+	retstat = fool_error("fool_ftruncate ftruncate");
     
     return retstat;
 }
@@ -893,76 +907,80 @@ int bb_ftruncate(const char *path, off_t offset, struct fuse_file_info *fi)
  *
  * Introduced in version 2.5
  */
-// Since it's currently only called after bb_create(), and bb_create()
+// Since it's currently only called after fool_create(), and fool_create()
 // opens the file, I ought to be able to just use the fd and ignore
 // the path...
-int bb_fgetattr(const char *path, struct stat *statbuf, struct fuse_file_info *fi)
+int fool_fgetattr(const char *path, struct stat *statbuf, struct fuse_file_info *fi)
 {
     int retstat = 0;
     
-    log_msg("\nbb_fgetattr(path=\"%s\", statbuf=0x%08x, fi=0x%08x)\n",
+    log_msg("\nfool_fgetattr(path=\"%s\", statbuf=0x%08x, fi=0x%08x)\n",
 	    path, statbuf, fi);
     log_fi(fi);
     
     retstat = fstat(fi->fh, statbuf);
     if (retstat < 0)
-	retstat = bb_error("bb_fgetattr fstat");
+	retstat = fool_error("fool_fgetattr fstat");
     
     log_stat(statbuf);
     
     return retstat;
 }
 
-struct fuse_operations bb_oper = {
-  .getattr = bb_getattr,
-  .readlink = bb_readlink,
+struct fuse_operations fool_oper = {
+  .getattr = fool_getattr,
+  .readlink = fool_readlink,
   // no .getdir -- that's deprecated
   .getdir = NULL,
-  .mknod = bb_mknod,
-  .mkdir = bb_mkdir,
-  .unlink = bb_unlink,
-  .rmdir = bb_rmdir,
-  .symlink = bb_symlink,
-  .rename = bb_rename,
-  .link = bb_link,
-  .chmod = bb_chmod,
-  .chown = bb_chown,
-  .truncate = bb_truncate,
-  .utime = bb_utime,
-  .open = bb_open,
-  .read = bb_read,
-  .write = bb_write,
+  .mknod = fool_mknod,
+  .mkdir = fool_mkdir,
+  .unlink = fool_unlink,
+  .rmdir = fool_rmdir,
+  .symlink = fool_symlink,
+  .rename = fool_rename,
+  .link = fool_link,
+  .chmod = fool_chmod,
+  .chown = fool_chown,
+  .truncate = fool_truncate,
+  .utime = fool_utime,
+  .open = fool_open,
+  .read = fool_read,
+  .write = fool_write,
   /** Just a placeholder, don't set */ // huh???
-  .statfs = bb_statfs,
-  .flush = bb_flush,
-  .release = bb_release,
-  .fsync = bb_fsync,
-  .setxattr = bb_setxattr,
-  .getxattr = bb_getxattr,
-  .listxattr = bb_listxattr,
-  .removexattr = bb_removexattr,
-  .opendir = bb_opendir,
-  .readdir = bb_readdir,
-  .releasedir = bb_releasedir,
-  .fsyncdir = bb_fsyncdir,
-  .init = bb_init,
-  .destroy = bb_destroy,
-  .access = bb_access,
-  .create = bb_create,
-  .ftruncate = bb_ftruncate,
-  .fgetattr = bb_fgetattr
+  .statfs = fool_statfs,
+  .flush = fool_flush,
+  .release = fool_release,
+  .fsync = fool_fsync,
+  .setxattr = fool_setxattr,
+  .getxattr = fool_getxattr,
+  .listxattr = fool_listxattr,
+  .removexattr = fool_removexattr,
+  .opendir = fool_opendir,
+  .readdir = fool_readdir,
+  .releasedir = fool_releasedir,
+  .fsyncdir = fool_fsyncdir,
+  .init = fool_init,
+  .destroy = fool_destroy,
+  .access = fool_access,
+  .create = fool_create,
+  .ftruncate = fool_ftruncate,
+  .fgetattr = fool_fgetattr
 };
 
-void bb_usage()
+void fool_usage()
 {
     fprintf(stderr, "usage:  bbfs [FUSE and mount options] rootDir mountPoint\n");
     abort();
 }
 
+/**
+System call of form bbfs [hdd_path] [ssd_path] [mount_point]
+*/
+
 int main(int argc, char *argv[])
 {
     int fuse_stat;
-    struct bb_state *bb_data;
+    struct fool_state *fool_data;
 
     // bbfs doesn't do any access checking on its own (the comment
     // blocks in fuse.h mention some of the functions that need
@@ -983,27 +1001,30 @@ int main(int argc, char *argv[])
     // start with a hyphen (this will break if you actually have a
     // rootpoint or mountpoint whose name starts with a hyphen, but so
     // will a zillion other programs)
-    if ((argc < 3) || (argv[argc-2][0] == '-') || (argv[argc-1][0] == '-'))
-	bb_usage();
+    if ((argc < 4) || (argv[argc-3][0] == '-') || (argv[argc-2][0] == '-') || (argv[argc-1][0] == '-'))
+	fool_usage();
 
-    bb_data = malloc(sizeof(struct bb_state));
-    if (bb_data == NULL) {
+    fool_data = malloc(sizeof(struct fool_state));
+    if (fool_data == NULL) {
 	perror("main calloc");
 	abort();
     }
 
     // Pull the rootdir out of the argument list and save it in my
     // internal data
-    bb_data->rootdir = realpath(argv[argc-2], NULL);
-    argv[argc-2] = argv[argc-1];
-    argv[argc-1] = NULL;
-    argc--;
+    fool_data->hdd = realpath(argv[argc-3], NULL);
+    fool_data->ssd = realpath(argv[argc-2], NULL);
+    fool_data->mnt = realpath(argv[argc-1], NULL);
+
+    argv[argc-3] = argv[argc-1];
+    argv[argc-1] = NULL; argv[argc-2] = NULL;
+    argc -= 2;
     
-    bb_data->logfile = log_open();
+    fool_data->logfile = log_open();
     
     // turn over control to fuse
     fprintf(stderr, "about to call fuse_main\n");
-    fuse_stat = fuse_main(argc, argv, &bb_oper, bb_data);
+    fuse_stat = fuse_main(argc, argv, &fool_oper, fool_data);
     fprintf(stderr, "fuse_main returned %d\n", fuse_stat);
     
     return fuse_stat;
