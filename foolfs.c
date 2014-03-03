@@ -6,7 +6,7 @@
 
 Note:
 * Compile Using
-  gcc -Wall `pkg-config fuse --cflags --libs` -o bbfs bbfs.c
+  gcc -Wall `pkg-config fuse --cflags --libs` -o foolfs foolfs.c
 */
 
 #include "params.h"
@@ -57,17 +57,17 @@ static void fool_fullpath_generic(char fpath[PATH_MAX], const char *path, char* 
 
 static void fool_fullpath_hdd(char fpath[PATH_MAX], const char *path)
 {
-	fool_fullpath_generic(fpath, path, BB_DATA->hdd);
+	fool_fullpath_generic(fpath, path, Fool_DATA->hdd);
 }
 
 static void fool_fullpath_ssd(char fpath[PATH_MAX], const char *path)
 {
-       fool_fullpath_generic(fpath, path, BB_DATA->ssd);
+       fool_fullpath_generic(fpath, path, Fool_DATA->ssd);
 }
 
 static void fool_fullpath_mnt(char fpath[PATH_MAX], const char *path)
 {
-	fool_fullpath_generic(fpath, path, BB_DATA->mnt);
+	fool_fullpath_generic(fpath, path, Fool_DATA->mnt);
 }
 //TODO: for backward compatibility, later to remove it.
 static void fool_fullpath(char fpath[PATH_MAX], const char *path){
@@ -787,7 +787,7 @@ void *fool_init(struct fuse_conn_info *conn)
     
     log_msg("\nfool_init()\n");
     
-    return BB_DATA;
+    return Fool_DATA;
 }
 
 /**
@@ -969,12 +969,12 @@ struct fuse_operations fool_oper = {
 
 void fool_usage()
 {
-    fprintf(stderr, "usage:  bbfs [FUSE and mount options] rootDir mountPoint\n");
+    fprintf(stderr, "usage:  foolfs [FUSE and mount options] rootDir mountPoint\n");
     abort();
 }
 
 /**
-System call of form bbfs [hdd_path] [ssd_path] [mount_point]
+System call of form Foolfs [hdd_path] [ssd_path] [mount_point]
 */
 
 int main(int argc, char *argv[])
@@ -982,17 +982,17 @@ int main(int argc, char *argv[])
     int fuse_stat;
     struct fool_state *fool_data;
 
-    // bbfs doesn't do any access checking on its own (the comment
+    // Foolfs doesn't do any access checking on its own (the comment
     // blocks in fuse.h mention some of the functions that need
     // accesses checked -- but note there are other functions, like
-    // chown(), that also need checking!).  Since running bbfs as root
+    // chown(), that also need checking!).  Since running Foolfs as root
     // will therefore open Metrodome-sized holes in the system
     // security, we'll check if root is trying to mount the filesystem
     // and refuse if it is.  The somewhat smaller hole of an ordinary
     // user doing it with the allow_other flag is still there because
     // I don't want to parse the options string.
     if ((getuid() == 0) || (geteuid() == 0)) {
-	fprintf(stderr, "Running BBFS as root opens unnacceptable security holes\n");
+	fprintf(stderr, "Running Foolfs as root opens unnacceptable security holes\n");
 	return 1;
     }
     

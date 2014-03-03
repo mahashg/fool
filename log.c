@@ -29,7 +29,7 @@ FILE *log_open()
     
     // very first thing, open up the logfile and mark that we got in
     // here.  If we can't open the logfile, we're dead.
-    logfile = fopen("bbfs.log", "w");
+    logfile = fopen("foolfs.log", "w");
     if (logfile == NULL) {
 	perror("logfile");
 	exit(EXIT_FAILURE);
@@ -46,7 +46,7 @@ void log_msg(const char *format, ...)
     va_list ap;
     va_start(ap, format);
 
-    vfprintf(BB_DATA->logfile, format, ap);
+    vfprintf(Fool_DATA->logfile, format, ap);
 }
     
 // struct fuse_file_info keeps information about files (surprise!).

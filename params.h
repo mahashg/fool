@@ -1,13 +1,3 @@
-/*
-  Copyright (C) 2012 Joseph J. Pfeiffer, Jr., Ph.D. <pfeiffer@cs.nmsu.edu>
-
-  This program can be distributed under the terms of the GNU GPLv3.
-  See the file COPYING.
-
-  There are a couple of symbols that need to be #defined before
-  #including all the headers.
-*/
-
 #ifndef _PARAMS_H_
 #define _PARAMS_H_
 
@@ -20,7 +10,7 @@
 // setlinebuf() later in consequence.
 #define _XOPEN_SOURCE 500
 
-// maintain bbfs state in here
+// maintain foolfs state in here
 #include <limits.h>
 #include <stdio.h>
 struct fool_state {
@@ -29,6 +19,6 @@ struct fool_state {
     char *ssd;
     char *mnt;
 };
-#define BB_DATA ((struct fool_state *) fuse_get_context()->private_data)
+#define Fool_DATA ((struct fool_state *) fuse_get_context()->private_data)
 
 #endif
