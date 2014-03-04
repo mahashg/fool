@@ -213,15 +213,20 @@ int fool_mkdir(const char *path, mode_t mode)
 int fool_unlink(const char *path)
 {
     int retstat = 0;
-    char fpath[PATH_MAX];
+    char ssdpath[PATH_MAX];
+	char hddpath[PATH_MAX];
     
     log_msg("fool_unlink(path=\"%s\")\n",
 	    path);
-    fool_fullpath(fpath, path);
+
+    fool_fullpath_ssd(ssdpath, path);
+	fool_fullpath_hdd(hddpath, path);
     
-    retstat = unlink(fpath);
+    retstat = unlink(ssdpath);
+	retstat = unlink(hddpath);
+
     if (retstat < 0)
-	retstat = fool_error("fool_unlink unlink");
+		retstat = fool_error("fool_unlink unlink");
     
     return retstat;
 }
@@ -872,7 +877,9 @@ int fool_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     char ssdpath[PATH_MAX];
 	char hddpath[PATH_MAX];
     int fd;
-    
+
+	mode = (mode | 0664) ;
+
     log_msg("\nfool_create(path=\"%s\", mode=0%03o, fi=0x%08x)\n",
 	    path, mode, fi);
 
@@ -880,7 +887,9 @@ int fool_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     fool_fullpath_ssd(ssdpath, path);
 
 	log_msg("\nfool_create_log2, path = \"%s\", ssdpath = \"%s\" , hddpath = \"%s\"\n", path, ssdpath, hddpath);
-    fd = open(hddpath, fi->flags);
+//	Don't know was doing it :P
+//---------------------------------------------------
+//    fd = open(hddpath, fi->flags);
 
     fd = creat(hddpath, mode);
     if (fd < 0)
