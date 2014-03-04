@@ -79,6 +79,7 @@ static void fool_fullpath(char fpath[PATH_MAX], const char *path){
 // Prototypes for all these functions, and the C-style comments,
 // come indirectly from /usr/include/fuse.h
 //
+
 /** Get file attributes.
  *
  * Similar to stat().  The 'st_dev' and 'st_blksize' fields are
@@ -92,6 +93,7 @@ int fool_getattr(const char *path, struct stat *statbuf)
     
     log_msg("\nfool_getattr(path=\"%s\", statbuf=0x%08x)\n",
 	  path, statbuf);
+
     fool_fullpath_ssd(fpath, path);
     
     retstat = lstat(fpath, statbuf);
@@ -122,6 +124,7 @@ int fool_readlink(const char *path, char *link, size_t size)
     
     log_msg("fool_readlink(path=\"%s\", link=\"%s\", size=%d)\n",
 	  path, link, size);
+
     fool_fullpath_ssd(fpath, path);
     
     retstat = readlink(fpath, link, size - 1);
@@ -151,8 +154,10 @@ int fool_mknod(const char *path, mode_t mode, dev_t dev)
 	  path, mode, dev);
 
     fool_fullpath_ssd(ssdpath, path);
-   	fool_fullpath_hdd(hddpath, path);
-    
+    fool_fullpath_hdd(hddpath, path);
+  
+    log_msg("creating file at %s\n", hddpath);
+ 
     // On Linux this could just be 'mknod(path, mode, rdev)' but this
     //  is more portable
     if (S_ISREG(mode)) {
@@ -183,20 +188,28 @@ int fool_mknod(const char *path, mode_t mode, dev_t dev)
 int fool_mkdir(const char *path, mode_t mode)
 {
     int retstat = 0;
-    char fpath[PATH_MAX];
+    char ssdpath[PATH_MAX];
+	char hddpath[PATH_MAX];
     
     log_msg("\nfool_mkdir(path=\"%s\", mode=0%3o)\n",
 	    path, mode);
-    fool_fullpath_ssd(fpath, path);
+
+    fool_fullpath_ssd(ssdpath, path);
+	fool_fullpath_hdd(hddpath, path);
     
-    retstat = mkdir(fpath, mode);
+	//---> it is necessary that both folders should be created
+    retstat = mkdir(ssdpath, mode);	// create folder in ssd
+	retstat = mkdir(hddpath, mode);	// create folder in hdd
+	
     if (retstat < 0)
-	retstat = fool_error("fool_mkdir mkdir");
+		retstat = fool_error("fool_mkdir mkdir");
     
     return retstat;
 }
 
 /** Remove a file */
+// first check if the file is in ssd or in hdd ?
+// set bits to see number of copies of the file available.
 int fool_unlink(const char *path)
 {
     int retstat = 0;
@@ -214,18 +227,24 @@ int fool_unlink(const char *path)
 }
 
 /** Remove a directory */
+// always remove it from ssd. it will never be on hdd
 int fool_rmdir(const char *path)
 {
     int retstat = 0;
-    char fpath[PATH_MAX];
+    char ssdpath[PATH_MAX];
+	char hddpath[PATH_MAX];
     
     log_msg("fool_rmdir(path=\"%s\")\n",
 	    path);
-    fool_fullpath_ssd(fpath, path);
+
+    fool_fullpath_ssd(ssdpath, path);
+	fool_fullpath_hdd(hddpath, path);
     
-    retstat = rmdir(fpath);
+    retstat = rmdir(ssdpath);
+	retstat = rmdir(hddpath);
+
     if (retstat < 0)
-	retstat = fool_error("fool_rmdir rmdir");
+		retstat = fool_error("fool_rmdir rmdir");
     
     return retstat;
 }
@@ -242,6 +261,7 @@ int fool_symlink(const char *path, const char *link)
     
     log_msg("\nfool_symlink(path=\"%s\", link=\"%s\")\n",
 	    path, link);
+
     fool_fullpath(flink, link);
     
     retstat = symlink(path, flink);
@@ -261,6 +281,7 @@ int fool_rename(const char *path, const char *newpath)
     
     log_msg("\nfool_rename(fpath=\"%s\", newpath=\"%s\")\n",
 	    path, newpath);
+
     fool_fullpath(fpath, path);
     fool_fullpath(fnewpath, newpath);
     
@@ -651,15 +672,16 @@ int fool_opendir(const char *path, struct fuse_file_info *fi)
 {
     DIR *dp;
     int retstat = 0;
-    char fpath[PATH_MAX];
+    char ssdpath[PATH_MAX];
     
     log_msg("\nfool_opendir(path=\"%s\", fi=0x%08x)\n",
 	  path, fi);
-    fool_fullpath(fpath, path);
+    fool_fullpath_ssd(ssdpath, path);
     
-    dp = opendir(fpath);
+    dp = opendir(ssdpath);
+
     if (dp == NULL)
-	retstat = fool_error("fool_opendir opendir");
+		retstat = fool_error("fool_opendir opendir");
     
     fi->fh = (intptr_t) dp;
     
@@ -707,8 +729,8 @@ int fool_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offs
     // which I can get an error from readdir()
     de = readdir(dp);
     if (de == 0) {
-	retstat = fool_error("fool_readdir readdir");
-	return retstat;
+		retstat = fool_error("fool_readdir readdir");
+		return retstat;
     }
 
     // This will copy the entire directory into the buffer.  The loop exits
@@ -716,11 +738,11 @@ int fool_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offs
     // returns something non-zero.  The first case just means I've
     // read the whole directory; the second means the buffer is full.
     do {
-	log_msg("calling filler with name %s\n", de->d_name);
-	if (filler(buf, de->d_name, NULL, 0) != 0) {
-	    log_msg("    ERROR fool_readdir filler:  buffer full");
-	    return -ENOMEM;
-	}
+		log_msg("calling filler with name %s\n", de->d_name);
+		if (filler(buf, de->d_name, NULL, 0) != 0) {
+	    	log_msg("    ERROR fool_readdir filler:  buffer full");
+		    return -ENOMEM;
+		}
     } while ((de = readdir(dp)) != NULL);
     
     log_fi(fi);
@@ -732,6 +754,7 @@ int fool_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offs
  *
  * Introduced in version 2.3
  */
+//TODO: check this
 int fool_releasedir(const char *path, struct fuse_file_info *fi)
 {
     int retstat = 0;
@@ -754,6 +777,7 @@ int fool_releasedir(const char *path, struct fuse_file_info *fi)
  */
 // when exactly is this called?  when a user calls fsync and it
 // happens to be a directory? ???
+//TODO: to check about its implementation
 int fool_fsyncdir(const char *path, int datasync, struct fuse_file_info *fi)
 {
     int retstat = 0;
@@ -851,15 +875,20 @@ int fool_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     
     log_msg("\nfool_create(path=\"%s\", mode=0%03o, fi=0x%08x)\n",
 	    path, mode, fi);
+
     fool_fullpath_hdd(hddpath, path);
-	fool_fullpath_ssd(ssdpath, path);
-    
+    fool_fullpath_ssd(ssdpath, path);
+
+	log_msg("\nfool_create_log2, path = \"%s\", ssdpath = \"%s\" , hddpath = \"%s\"\n", path, ssdpath, hddpath);
+    fd = open(hddpath, fi->flags);
+
     fd = creat(hddpath, mode);
     if (fd < 0)
 		retstat = fool_error("fool_create creat");
 
-	symlink(hddpath, ssdpath);
     fd = open(hddpath, fi->flags);
+
+    symlink(hddpath, ssdpath);
     
     fi->fh = fd;
     
@@ -974,7 +1003,8 @@ void fool_usage()
 }
 
 /**
-System call of form Foolfs [hdd_path] [ssd_path] [mount_point]
+System call of form:
+	./foolfs [hdd_path] [ssd_path] [mount_point]
 */
 
 int main(int argc, char *argv[])
