@@ -11,3 +11,7 @@ clean:
 	rm -f foolfs foolfs.o log.o
 cleanlogs:
 	rm -r foolfs.log
+
+cleanall: clean cleanlogs
+	echo "cleaned all"
+	
