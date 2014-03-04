@@ -9,3 +9,5 @@ log.o : log.c log.h params.h
 
 clean:
 	rm -f foolfs foolfs.o log.o
+cleanlogs:
+	rm -r foolfs.log
